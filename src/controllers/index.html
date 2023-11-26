@@ -1,52 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Форма для загрузки данных</title>
+  <title>Регистрация</title>
 </head>
 <body>
-  <h1>Форма для загрузки данных</h1>
-  <form id="uploadForm" enctype="multipart/form-data">
-    <input type="file" id="imageInput" name="images" multiple /><br><br>
-    <label for="name">Название товара:</label>
-    <input type="text" id="name" name="name"><br><br>
-    <label for="description">Описание:</label>
-    <input type="text" id="description" name="description"><br><br>
-    <!-- Добавьте остальные поля здесь -->
-    <button type="submit">Загрузить</button>
+  <h2>Регистрация</h2>
+  <form action="http://localhost:3001/registration" method="post" enctype="multipart/form-data">
+    <div>
+      <label for="name">avatar:</label>
+      <input type="file" id="avatar" name="avatar" >
+    </div>
+    <div>
+      <label for="name">Имя:</label>
+      <input type="text" id="name" name="name">
+    </div>
+    <div>
+      <label for="email">Электронная почта:</label>
+      <input type="email" id="email" name="email">
+    </div>
+    <div>
+      <label for="password">Пароль:</label>
+      <input type="password" id="password" name="password">
+    </div>
+    <div>
+      <input type="submit" value="Зарегистрироваться">
+    </div>
   </form>
-
-  <script>
-    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const formData = new FormData();
-      const input = document.getElementById('imageInput');
-      for (const file of input.files) {
-        formData.append('images', file);
-      }
-
-      // Добавьте остальные поля в объект FormData
-      formData.append('name', document.getElementById('name').value);
-      formData.append('description', document.getElementById('description').value);
-      // Добавьте остальные поля здесь
-
-      try {
-        const response = await fetch('http://localhost:3001/products', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (response.ok) {
-          alert('Данные успешно загружены');
-        } else {
-          alert('Произошла ошибка при загрузке данных');
-        }
-      } catch (error) {
-        console.error('Ошибка:', error);
-        alert('Произошла ошибка при отправке запроса');
-      }
-    });
-  </script>
 </body>
 </html>

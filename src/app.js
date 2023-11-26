@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(cors());
 
 app.post('/email', (req, res) => {
-    let transporter = nodemailer.createTransport({
+    const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 587,
       secure: false,
@@ -50,6 +50,7 @@ app.post('/email', (req, res) => {
   });
 
 app.use('/uploads', express.static(imagePath));
+app.use('/avatars', express.static('src/avatars'));
 
 
 app.use('/products', productRouter);

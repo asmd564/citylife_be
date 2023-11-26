@@ -2,14 +2,31 @@ import { User } from "../models/user.js";
 import { v4 as uuidv4 } from 'uuid';
 import { userService } from "../services/user.service.js";
 import { jwtService } from "../services/jwt.service.js";
+import { emailService } from "../services/email.service.js";
+import bcrypt from 'bcrypt';
+import path from "path";
+import 'dotenv/config.js';
 
 
 const registration = async (req, resp) => {
-   const { email, password } = req.body;
+    try {
+   const { email, password, name } = req.body;
 
    const activationToken = uuidv4();
-   const newUser = await User.create({ email, password, activationToken });
+
+   let avatar = null;
+     if (req.file) {
+        avatar = `${process.env.CLIENT_HOST}/${req.file.path}`.replace('src/', '');
+     }
+
+   const hashedPassword = await bcrypt.hash(password, 10);
+    
+   const newUser = await User.create({ email, password: hashedPassword, activationToken, name, avatar });
+   await emailService.sendActivationEmail(email, activationToken);
    resp.send(newUser);
+    } catch (error) {
+        resp.sendStatus(500)
+    }
 }
 
 const activate = async (req, resp) => {
@@ -21,9 +38,9 @@ const activate = async (req, resp) => {
         return;
     }
     user.activationToken = null;
-    user.save();
+    await user.save();
 
-    resp.send(user);
+    resp.send("<h1>Ваш аккаунт активирован</h1>");
 }
 
 const login = async (req, resp) => {
@@ -31,11 +48,15 @@ const login = async (req, resp) => {
 
     const user = await userService.findByEmail(email);
 
-    if(!user || user.password !== password) {
+    if(!user) {
         resp.send(401);
         return;
     }
-
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+        resp.sendStatus(401);
+        return;
+    }
     const normalizedUser = userService.normalize(user)
     const accessToken = jwtService.sign(normalizedUser)
 
@@ -48,5 +69,5 @@ const login = async (req, resp) => {
 export const authController = {
     registration,
     activate,
-    login
+    login,
 }

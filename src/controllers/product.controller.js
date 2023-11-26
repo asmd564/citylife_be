@@ -1,5 +1,9 @@
 import * as productsService from '../services/products.service.js';
 import multer from 'multer';
+import sharp from 'sharp';
+import { fileURLToPath } from 'url';
+import path from 'path';
+import 'dotenv/config.js';
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -26,9 +30,27 @@ export const getOne = async (req, resp) => {
 
 export const addOne = async (req, resp) => {
     const { name, description, title, price, type, rooms, area, state, flor, heating, waterheating, buildingtype, adress, district, top, favotire, currency, city, ishouse, lat, lng, user_id } = req.body;
-    const imgUrls = req.files.map(file => `http://localhost:3001/uploads/${file.filename}`);
+    const imgUrls = [];
 
     try {
+        for (const file of req.files) {
+            const __filename = fileURLToPath(import.meta.url);
+            const watermarkPath = path.join(path.dirname(__filename),'waterpath.png'); // Путь к вашему водяному знаку
+
+            // Используем библиотеку sharp для обработки изображения (наложение водяного знака)
+            const processedImage = await sharp(file.path)
+                .composite([{ input: watermarkPath, gravity: 'center', blend: 'over', opacity: 0.1 }])
+                .toBuffer();
+
+            // Генерируем новое имя файла для сохранения на сервере
+            const filename = `${Date.now()}-${file.originalname}`;
+
+            // Сохраняем обработанное изображение
+            await sharp(processedImage).toFile(`src/uploads/${filename}`);
+
+            imgUrls.push(`${process.env.CLIENT_HOST}/uploads/${filename}`);
+        }
+
         const product = await productsService.create(
             name,
             imgUrls,
