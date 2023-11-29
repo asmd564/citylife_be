@@ -42,7 +42,25 @@ export const addOne = async (req, resp) => {
             const watermarkSize = Math.round((Math.min(metadata.width, metadata.height) * watermarkPercentage) / 100);
             const processedImage = await sharp(file.path)
                 .resize(null, null)
-                .composite([{ input: watermarkPath, gravity: 'center', blend: 'over', raw: { width: watermarkSize, height: watermarkSize }, opacity: 0.1 }])
+                .composite([
+                    {
+                        input: watermarkPath,
+                        gravity: 'center',
+                        blend: 'over',
+                        top: (metadata.height - watermarkSize) / 2, // Вычисляем положение водяного знака по вертикали
+                        left: (metadata.width - watermarkSize) / 2, // Вычисляем положение водяного знака по горизонтали
+                        width: watermarkSize,
+                        height: watermarkSize,
+                        tile: false,
+                        raw: {
+                            width: watermarkSize,
+                            height: watermarkSize,
+                            channels: 4 // Укажите число каналов для вашего изображения (4 для PNG)
+                        },
+                        premultiplied: true,
+                        // opacity: 0.1 // Можно использовать для прозрачности водяного знака
+                    }
+                ])
                 .toBuffer();
 
             // Генерируем новое имя файла для сохранения на сервере
