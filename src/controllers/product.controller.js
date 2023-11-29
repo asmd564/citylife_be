@@ -36,11 +36,10 @@ export const addOne = async (req, resp) => {
         for (const file of req.files) {
             const __filename = fileURLToPath(import.meta.url);
             const watermarkPath = path.join(path.dirname(__filename),'waterpath.png'); // Путь к вашему водяному знаку
-            const watermarkSizePercentage = 0.5; // Установите процентное соотношение размера водяного знака от размера изображения
 
             const metadata = await sharp(file.path).metadata();
-            const watermarkWidth = Math.round(metadata.width * watermarkSizePercentage);
-            const watermarkHeight = Math.round(metadata.height * watermarkSizePercentage);
+            const watermarkWidth = 200;
+            const watermarkHeight = 200;
             const processedImage = await sharp(file.path)
                 .resize(null, null)
                 .composite([{
@@ -49,13 +48,11 @@ export const addOne = async (req, resp) => {
                     blend: 'over',
                     width: watermarkWidth,
                     height: watermarkHeight,
-                    tile: false,
                     raw: {
                         width: watermarkWidth,
                         height: watermarkHeight,
                         channels: 4
                     },
-                    premultiplied: true,
                     opacity: 0.5 // Настройте прозрачность водяного знака
                 }])
                 .toBuffer();
