@@ -47,8 +47,8 @@ export const addOne = async (req, resp) => {
                         input: watermarkPath,
                         gravity: 'center',
                         blend: 'over',
-                        top: (metadata.height - watermarkSize) / 2, // Вычисляем положение водяного знака по вертикали
-                        left: (metadata.width - watermarkSize) / 2, // Вычисляем положение водяного знака по горизонтали
+                        top: Math.round((metadata.height - watermarkSize) / 2), // Передаем целочисленные значения top и left
+                        left: Math.round((metadata.width - watermarkSize) / 2), // Вычисляем положение водяного знака по горизонтали
                         width: watermarkSize,
                         height: watermarkSize,
                         tile: false,
