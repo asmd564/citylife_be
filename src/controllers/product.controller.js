@@ -42,7 +42,7 @@ export const addOne = async (req, resp) => {
             const watermarkSize = Math.round((Math.min(metadata.width, metadata.height) * watermarkPercentage) / 100);
             const processedImage = await sharp(file.path)
                 .resize(null, null)
-                .composite([{ input: watermarkPath, gravity: 'center', blend: 'over', scale: { width: `${watermarkSize}%`, height: `${watermarkSize}%` }, opacity: 0.1 }])
+                .composite([{ input: watermarkPath, gravity: 'center', blend: 'over', raw: { width: watermarkSize, height: watermarkSize }, opacity: 0.1 }])
                 .toBuffer();
 
             // Генерируем новое имя файла для сохранения на сервере
