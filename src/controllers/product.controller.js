@@ -39,7 +39,7 @@ export const addOne = async (req, resp) => {
 
             // Используем библиотеку sharp для обработки изображения (наложение водяного знака)
             const processedImage = await sharp(file.path)
-                .composite([{ input: watermarkPath, gravity: 'center', blend: 'over', opacity: 0.1 }])
+                .composite([{ input: watermarkPath, gravity: 'center', blend: 'over', scale: { width: '10%', height: '10%' }, opacity: 0.1 }])
                 .toBuffer();
 
             // Генерируем новое имя файла для сохранения на сервере
