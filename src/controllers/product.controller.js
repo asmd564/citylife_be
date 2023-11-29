@@ -36,7 +36,7 @@ export const addOne = async (req, resp) => {
         for (const file of req.files) {
             const __filename = fileURLToPath(import.meta.url);
             const watermarkPath = path.join(path.dirname(__filename),'waterpath.png'); // Путь к вашему водяному знаку
-            const watermarkPercentage = 0.1; // Установите процентное соотношение размера водяного знака от размера изображения
+            const watermarkSizePercentage = 0.1; // Установите процентное соотношение размера водяного знака от размера изображения
 
             const metadata = await sharp(file.path).metadata();
             const watermarkWidth = Math.round(metadata.width * watermarkSizePercentage);
