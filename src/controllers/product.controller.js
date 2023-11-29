@@ -47,8 +47,6 @@ export const addOne = async (req, resp) => {
                     input: watermarkPath,
                     gravity: 'center',
                     blend: 'over',
-                    top: Math.round((metadata.height - watermarkHeight) / 2),
-                    left: Math.round((metadata.width - watermarkWidth) / 2),
                     width: watermarkWidth,
                     height: watermarkHeight,
                     tile: false,
