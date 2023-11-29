@@ -37,24 +37,10 @@ export const addOne = async (req, resp) => {
             const __filename = fileURLToPath(import.meta.url);
             const watermarkPath = path.join(path.dirname(__filename),'waterpath.png'); // Путь к вашему водяному знаку
 
-            const metadata = await sharp(file.path).metadata();
-            const watermarkWidth = 200;
-            const watermarkHeight = 200;
+            // Используем библиотеку sharp для обработки изображения (наложение водяного знака)
             const processedImage = await sharp(file.path)
-                .resize(null, null)
-                .composite([{
-                    input: watermarkPath,
-                    gravity: 'center',
-                    blend: 'over',
-                    width: watermarkWidth,
-                    height: watermarkHeight,
-                    raw: {
-                        width: watermarkWidth,
-                        height: watermarkHeight,
-                        channels: 4
-                    },
-                    opacity: 0.5 // Настройте прозрачность водяного знака
-                }])
+                .resize({ width: 900 })
+                .composite([{ input: watermarkPath, gravity: 'center', blend: 'over', opacity: 0.1 }])
                 .toBuffer();
 
             // Генерируем новое имя файла для сохранения на сервере
