@@ -36,31 +36,30 @@ export const addOne = async (req, resp) => {
         for (const file of req.files) {
             const __filename = fileURLToPath(import.meta.url);
             const watermarkPath = path.join(path.dirname(__filename),'waterpath.png'); // Путь к вашему водяному знаку
-            const watermarkPercentage = 100; // Установите процентное соотношение размера водяного знака от размера изображения
+            const watermarkPercentage = 0.1; // Установите процентное соотношение размера водяного знака от размера изображения
 
             const metadata = await sharp(file.path).metadata();
-            const watermarkSize = Math.round((Math.min(metadata.width, metadata.height) * watermarkPercentage) / 100);
+            const watermarkWidth = Math.round(metadata.width * watermarkSizePercentage);
+            const watermarkHeight = Math.round(metadata.height * watermarkSizePercentage);
             const processedImage = await sharp(file.path)
                 .resize(null, null)
-                .composite([
-                    {
-                        input: watermarkPath,
-                        gravity: 'center',
-                        blend: 'over',
-                        top: Math.round((metadata.height - watermarkSize) / 2), // Передаем целочисленные значения top и left
-                        left: Math.round((metadata.width - watermarkSize) / 2), // Вычисляем положение водяного знака по горизонтали
-                        width: watermarkSize,
-                        height: watermarkSize,
-                        tile: false,
-                        raw: {
-                            width: watermarkSize,
-                            height: watermarkSize,
-                            channels: 4 // Укажите число каналов для вашего изображения (4 для PNG)
-                        },
-                        premultiplied: true,
-                        // opacity: 0.1 // Можно использовать для прозрачности водяного знака
-                    }
-                ])
+                .composite([{
+                    input: watermarkPath,
+                    gravity: 'center',
+                    blend: 'over',
+                    top: Math.round((metadata.height - watermarkHeight) / 2),
+                    left: Math.round((metadata.width - watermarkWidth) / 2),
+                    width: watermarkWidth,
+                    height: watermarkHeight,
+                    tile: false,
+                    raw: {
+                        width: watermarkWidth,
+                        height: watermarkHeight,
+                        channels: 4
+                    },
+                    premultiplied: true,
+                    opacity: 0.5 // Настройте прозрачность водяного знака
+                }])
                 .toBuffer();
 
             // Генерируем новое имя файла для сохранения на сервере
