@@ -31,13 +31,21 @@ const updateUser = async (req, resp) => {
         const user = await User.findByPk(id);
 
         if (!user) {
-            resp.sendStatus(404);
+            resp.status(404).send('Пользователь не найден');
             return;
         }
 
-        user.email = email || user.email;
-        user.name = name || user.name;
-        user.avatar = avatar || user.avatar;
+        if (email) {
+            user.email = email;
+        }
+
+        if (name) {
+            user.name = name;
+        }
+
+        if (avatar) {
+            user.avatar = avatar;
+        }
 
         if (password) {
             const hashedPassword = await bcrypt.hash(password, 10);
@@ -48,9 +56,11 @@ const updateUser = async (req, resp) => {
 
         resp.send(user);
     } catch (error) {
-        resp.sendStatus(500);
+        console.error('Ошибка при обновлении данных пользователя:', error);
+        resp.status(500).send('Ошибка сервера при обновлении данных пользователя');
     }
 };
+
 
 const deleteUser = async (req, res) => {
     const { id } = req.params;
