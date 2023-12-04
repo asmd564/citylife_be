@@ -1,6 +1,7 @@
 import { User } from "../models/user.js";
 import { userService } from "../services/user.service.js";
 import bcrypt from 'bcrypt';
+import 'dotenv/config.js';
 
 const getAllActivated = async (req, resp) => {
     const users = await userService.getAllActivated();
