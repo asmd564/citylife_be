@@ -25,7 +25,7 @@ const getById = async (req, resp) => {
 
 const updateUser = async (req, resp) => {
     const { id } = req.params;
-    const { email, password, name, avatar } = req.body;
+    const { email, password, name, surname, avatar } = req.body;
 
     try {
         let user = await User.findByPk(id);
@@ -34,13 +34,16 @@ const updateUser = async (req, resp) => {
             return resp.status(404).send('Пользователь не найден');
         }
 
-        // Проверяем, было ли отправлено новое значение для поля и обновляем только те поля, которые присутствуют в запросе
         if (email !== undefined) {
             user.email = email;
         }
 
         if (name !== undefined) {
             user.name = name;
+        }
+
+        if (surname !== undefined) {
+            user.surname = surname;
         }
 
         if (avatar !== undefined) {
@@ -52,7 +55,7 @@ const updateUser = async (req, resp) => {
             user.password = hashedPassword;
         }
 
-        user = await user.save(); // Обновляем и сохраняем пользователя
+        user = await user.save();
 
         resp.send(user);
     } catch (error) {
