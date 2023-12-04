@@ -1,6 +1,7 @@
 import { User } from "../models/user.js";
 import { userService } from "../services/user.service.js";
 import bcrypt from 'bcrypt';
+import path from "path";
 import 'dotenv/config.js';
 
 const getAllActivated = async (req, resp) => {
@@ -58,13 +59,9 @@ const updateUser = async (req, resp) => {
             user.surname = surname;
         }
 
-        let avatar = null;
         if (req.file) {
-            avatar = `${process.env.CLIENT_HOST}/${req.file.path}`.replace('src/', '');
-        }
-
-        if (avatar !== undefined) {
-            user.avatar = avatar;
+            const avatarPath = `${process.env.CLIENT_HOST}/${req.file.path}`.replace('src/', '');
+            user.avatar = avatarPath;
         }
 
         if (password !== undefined) {

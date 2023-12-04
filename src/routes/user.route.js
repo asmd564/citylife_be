@@ -13,9 +13,9 @@ const storage = multer.diskStorage({
       const extension = file.originalname.split('.').pop();
       cb(null, `${uuidv4()}-${uniqueSuffix}.${extension}`);
     }
-  });
-  
-  const upload = multer({ storage: storage });
+});
+
+const upload = multer({ storage: storage });
 
 export const userRouter =  new express.Router();
 
