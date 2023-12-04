@@ -26,7 +26,8 @@ const getById = async (req, resp) => {
 
 const updateUser = async (req, resp) => {
     const { id } = req.params;
-    const { email, password, name, surname, avatar } = req.body;
+    const { email, password, name, surname } = req.body;
+    const avatar = req.files.avatar;
 
     try {
         let user = await User.findByPk(id);
