@@ -26,7 +26,7 @@ const getById = async (req, resp) => {
 
 const updateUser = async (req, resp) => {
     const { id } = req.params;
-    const { email, password, name, surname } = req.body;
+    const { email, password, name, surname, exp, position } = req.body;
 
     let avatar = null;
      if (req.file) {
@@ -46,6 +46,16 @@ const updateUser = async (req, resp) => {
 
         if (name !== undefined) {
             user.name = name;
+        }
+
+
+        if (exp !== undefined) {
+            user.exp = exp;
+        }
+
+
+        if (position !== undefined) {
+            user.position = position;
         }
 
         if (surname !== undefined) {
