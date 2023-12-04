@@ -27,7 +27,11 @@ const getById = async (req, resp) => {
 const updateUser = async (req, resp) => {
     const { id } = req.params;
     const { email, password, name, surname } = req.body;
-    const avatar = req.files.avatar;
+
+    let avatar = null;
+     if (req.file) {
+        avatar = `${process.env.CLIENT_HOST}/${req.file.path}`.replace('src/', '');
+     }
 
     try {
         let user = await User.findByPk(id);
