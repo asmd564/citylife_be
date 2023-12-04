@@ -28,31 +28,31 @@ const updateUser = async (req, resp) => {
     const { email, password, name, avatar } = req.body;
 
     try {
-        const user = await User.findByPk(id);
+        let user = await User.findByPk(id);
 
         if (!user) {
-            resp.status(404).send('Пользователь не найден');
-            return;
+            return resp.status(404).send('Пользователь не найден');
         }
 
-        if (email) {
+        // Проверяем, было ли отправлено новое значение для поля и обновляем только те поля, которые присутствуют в запросе
+        if (email !== undefined) {
             user.email = email;
         }
 
-        if (name) {
+        if (name !== undefined) {
             user.name = name;
         }
 
-        if (avatar) {
+        if (avatar !== undefined) {
             user.avatar = avatar;
         }
 
-        if (password) {
+        if (password !== undefined) {
             const hashedPassword = await bcrypt.hash(password, 10);
             user.password = hashedPassword;
         }
 
-        await user.save();
+        user = await user.save(); // Обновляем и сохраняем пользователя
 
         resp.send(user);
     } catch (error) {
@@ -60,6 +60,7 @@ const updateUser = async (req, resp) => {
         resp.status(500).send('Ошибка сервера при обновлении данных пользователя');
     }
 };
+
 
 
 const deleteUser = async (req, res) => {
