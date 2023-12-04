@@ -2,6 +2,7 @@ import express from 'express';
 import jwt from'jsonwebtoken';
 import multer from 'multer';
 import { userController } from '../controllers/user.controller.js';
+import { v4 as uuidv4 } from 'uuid';
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
