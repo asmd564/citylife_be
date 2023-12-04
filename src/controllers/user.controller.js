@@ -1,5 +1,6 @@
 import { User } from "../models/user.js";
 import { userService } from "../services/user.service.js";
+import bcrypt from 'bcrypt';
 
 const getAllActivated = async (req, resp) => {
     const users = await userService.getAllActivated();
