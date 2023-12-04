@@ -70,6 +70,7 @@ const updateUser = async (req, resp) => {
         }
 
         user = await user.save();
+        console.log(req.file)
 
         resp.send(user);
     } catch (error) {
