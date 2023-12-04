@@ -29,11 +29,6 @@ const updateUser = async (req, resp) => {
     const { id } = req.params;
     const { email, password, name, surname, exp, position } = req.body;
 
-    let avatar = null;
-     if (req.file) {
-        avatar = `${process.env.CLIENT_HOST}/${req.file.path}`.replace('src/', '');
-     }
-
     try {
         let user = await User.findByPk(id);
 
@@ -61,6 +56,11 @@ const updateUser = async (req, resp) => {
 
         if (surname !== undefined) {
             user.surname = surname;
+        }
+
+        let avatar = null;
+        if (req.file) {
+            avatar = `${process.env.CLIENT_HOST}/${req.file.path}`.replace('src/', '');
         }
 
         if (avatar !== undefined) {
