@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage, limits: { files: 30 } });
 
 export const uploadImageHandler = upload.array('images', 30);
 
@@ -39,6 +39,7 @@ export const addOne = async (req, resp) => {
 
             // Используем библиотеку sharp для обработки изображения (наложение водяного знака)
             const processedImage = await sharp(file.path)
+                .rotate()
                 .resize({ width: 900 })
                 .composite([{ input: watermarkPath, gravity: 'center', blend: 'over', opacity: 0.6 }])
                 .toBuffer();
