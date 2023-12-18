@@ -111,7 +111,32 @@ export const editOne = async (req, resp) => {
         return;
     }
 
-   const updatedProduct = await productsService.update({ id, name, imgUrl, description, title, price, type, rooms, area, state, flor, heating, waterheating, buildingtype, adress, district, top, favotire, currency, city, ishouse, lat, lng, user_id });
+    const updatedProduct = await productsService.update({
+        id,
+        name,
+        imgUrls,
+        description,
+        title,
+        price,
+        type,
+        rooms,
+        area,
+        state,
+        flor,
+        heating,
+        waterheating,
+        buildingtype,
+        adress,
+        district,
+        top,
+        favotire,
+        currency,
+        city,
+        isHouse,
+        lat,
+        lng,
+        user_id
+    });
 
     resp.send(updatedProduct);
 
