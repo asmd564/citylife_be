@@ -104,12 +104,7 @@ export const removeOne = async (req, resp) => {
 export const editOne = async (req, resp) => {
     try {
         const { id } = req.params;
-        const { name, description, title, price, type, rooms, area, state, flor, heating, waterheating, buildingtype, adress, district, top, favotire, currency, city, isHouse, lat, lng, user_id, imgUrls } = req.body;
-
-        if (!Array.isArray(imgUrls)) {
-            // Преобразовываем в массив, если imgUrls не является массивом
-            imgUrls = [imgUrls];
-        }
+        const fieldsToUpdate = req.body;
 
         const product = await productsService.getById(id);
         if (!product) {
@@ -119,29 +114,7 @@ export const editOne = async (req, resp) => {
 
         const updatedProduct = await productsService.update({
             id,
-            name,
-            imgUrls, // обновляем imgUrls
-            description,
-            title,
-            price,
-            type,
-            rooms,
-            area,
-            state,
-            flor,
-            heating,
-            waterheating,
-            buildingtype,
-            adress,
-            district,
-            top,
-            favotire,
-            currency,
-            city,
-            isHouse,
-            lat,
-            lng,
-            user_id
+            ...fieldsToUpdate // Используем оператор spread для объединения полей объекта из req.body с id
         });
 
         resp.send(updatedProduct);
