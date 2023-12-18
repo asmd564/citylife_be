@@ -104,7 +104,7 @@ export const removeOne = async (req, resp) => {
 export const editOne = async (req, resp) => {
     try {
         const { id } = req.params;
-        const fieldsToUpdate = req.body;
+        let { imgUrls, ...fieldsToUpdate } = req.body; // Выделяем imgUrls из req.body
 
         const product = await productsService.getById(id);
         if (!product) {
@@ -112,9 +112,14 @@ export const editOne = async (req, resp) => {
             return;
         }
 
+        if (!imgUrls) {
+            imgUrls = product.imgUrls; // Если imgUrls отсутствует в запросе, используем текущие значения из базы данных
+        }
+
         const updatedProduct = await productsService.update({
             id,
-            ...fieldsToUpdate // Используем оператор spread для объединения полей объекта из req.body с id
+            ...fieldsToUpdate,
+            imgUrls // Обновляем imgUrls только если оно было передано в запросе
         });
 
         resp.send(updatedProduct);
