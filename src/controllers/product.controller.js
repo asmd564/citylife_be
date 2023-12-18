@@ -102,25 +102,44 @@ export const removeOne = async (req, resp) => {
 }
 
 export const editOne = async (req, resp) => {
-    try {
-        const { id } = req.params;
-        let { imgUrls, ...fieldsToUpdate } = req.body; // Выделяем imgUrls из req.body
+    const { id } = req.params;
+    const { imgUrls: newImgUrls, ...fieldsToUpdate } = req.body;
 
+    try {
         const product = await productsService.getById(id);
         if (!product) {
             resp.sendStatus(404);
             return;
         }
 
-        if (!imgUrls) {
-            imgUrls = product.imgUrls; // Если imgUrls отсутствует в запросе, используем текущие значения из базы данных
-        }
+        let updatedProduct;
 
-        const updatedProduct = await productsService.update({
-            id,
-            ...fieldsToUpdate,
-            imgUrls // Обновляем imgUrls только если оно было передано в запросе
-        });
+        if (newImgUrls && Array.isArray(newImgUrls)) {
+            const uploadedImgUrls = [];
+
+            // Обработка загруженных изображений с помощью multer
+            for (const file of req.files) {
+                const uploadedImgPath = path.join('src/uploads/', file.filename);
+                // Добавление путей загруженных изображений
+                uploadedImgUrls.push(`${process.env.CLIENT_HOST}/${uploadedImgPath}`);
+            }
+
+            // Объединение старых ссылок и новых ссылок на изображения
+            const combinedImgUrls = [...product.imgUrls, ...uploadedImgUrls];
+
+            // Обновление поля imgUrls и других полей
+            updatedProduct = await productsService.update({
+                id,
+                ...fieldsToUpdate,
+                imgUrls: combinedImgUrls,
+            });
+        } else {
+            // Если нет новых изображений, обновляем только другие поля без изменения imgUrls
+            updatedProduct = await productsService.update({
+                id,
+                ...fieldsToUpdate,
+            });
+        }
 
         resp.send(updatedProduct);
     } catch (error) {

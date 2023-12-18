@@ -84,7 +84,7 @@ export const update = async ({
     favotire,
     currency,
     city,
-    ishouse,
+    isHouse,
     lat,
     lng
 }) => {
@@ -108,7 +108,7 @@ export const update = async ({
         favotire,
         currency,
         city,
-        ishouse,
+        isHouse,
         lat,
         lng
     }, { where: { id } })
