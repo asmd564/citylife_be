@@ -103,7 +103,7 @@ export const removeOne = async (req, resp) => {
 
 export const editOne = async (req, resp) => {
     const { id } = req.params;
-    const { name, imgUrl, description, title, price, type, rooms, area, state, flor, heating, waterheating, buildingtype, adress, district, top, favotire, currency, city, ishouse, lat, lng, user_id } = req.body;
+    const { name, imgUrls, description, title, price, type, rooms, area, state, flor, heating, waterheating, buildingtype, adress, district, top, favotire, currency, city, isHouse, lat, lng, user_id } = req.body;
 
     const product = await productsService.getById;
     if(!product) {
