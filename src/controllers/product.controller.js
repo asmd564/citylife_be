@@ -106,7 +106,7 @@ export const editOne = async (req, resp) => {
     const { name, description, title, price, type, rooms, area, state, flor, heating, waterheating, buildingtype, adress, district, top, favotire, currency, city, isHouse, lat, lng, user_id } = req.body;
     const { imgUrls } = req.body;
     if (!Array.isArray(imgUrls)) {
-        return resp.status(400).json({ error: 'imgUrls должен быть массивом' });
+        imgUrls = [imgUrls];
     }
     try {
         const product = await productsService.getById(id);
