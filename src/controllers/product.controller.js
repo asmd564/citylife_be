@@ -105,39 +105,43 @@ export const editOne = async (req, resp) => {
     const { id } = req.params;
     const { name, imgUrls, description, title, price, type, rooms, area, state, flor, heating, waterheating, buildingtype, adress, district, top, favotire, currency, city, isHouse, lat, lng, user_id } = req.body;
 
-    const product = await productsService.getById;
-    if(!product) {
-        resp.sendStatus(404);
-        return;
+    try {
+        const product = await productsService.getById(id);
+        if (!product) {
+            resp.sendStatus(404);
+            return;
+        }
+
+        const updatedProduct = await productsService.update({
+            id,
+            name,
+            imgUrls, // обновляем imgUrls
+            description,
+            title,
+            price,
+            type,
+            rooms,
+            area,
+            state,
+            flor,
+            heating,
+            waterheating,
+            buildingtype,
+            adress,
+            district,
+            top,
+            favotire,
+            currency,
+            city,
+            isHouse,
+            lat,
+            lng,
+            user_id
+        });
+
+        resp.send(updatedProduct);
+    } catch (error) {
+        console.error(error);
+        resp.status(500).json({ error: 'Ошибка при обновлении продукта' });
     }
-
-    const updatedProduct = await productsService.update({
-        id,
-        name,
-        imgUrls,
-        description,
-        title,
-        price,
-        type,
-        rooms,
-        area,
-        state,
-        flor,
-        heating,
-        waterheating,
-        buildingtype,
-        adress,
-        district,
-        top,
-        favotire,
-        currency,
-        city,
-        isHouse,
-        lat,
-        lng,
-        user_id
-    });
-
-    resp.send(updatedProduct);
-
 }
