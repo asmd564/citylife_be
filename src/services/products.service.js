@@ -66,7 +66,7 @@ export const create = async (
 export const update = async ({
     id,
     name,
-    imgUrl,
+    imgUrls,
     description,
     title,
     price,
@@ -90,7 +90,7 @@ export const update = async ({
 }) => {
     await Product.update({ 
         name,
-        imgUrl,
+        imgUrls,
         description,
         title,
         price,
