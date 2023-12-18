@@ -29,7 +29,7 @@ export const getOne = async (req, resp) => {
 }
 
 export const addOne = async (req, resp) => {
-    const { name, description, title, price, type, rooms, area, state, flor, heating, waterheating, buildingtype, adress, district, top, favotire, currency, city, ishouse, lat, lng, user_id } = req.body;
+    const { name, description, title, price, type, rooms, area, state, flor, heating, waterheating, buildingtype, adress, district, top, favotire, currency, city, isHouse, lat, lng, user_id } = req.body;
     const imgUrls = [];
 
     try {
@@ -73,7 +73,7 @@ export const addOne = async (req, resp) => {
             favotire,
             currency,
             city,
-            ishouse,
+            isHouse,
             lat,
             lng,
             user_id,
@@ -102,13 +102,15 @@ export const removeOne = async (req, resp) => {
 }
 
 export const editOne = async (req, resp) => {
-    const { id } = req.params;
-    const { name, description, title, price, type, rooms, area, state, flor, heating, waterheating, buildingtype, adress, district, top, favotire, currency, city, isHouse, lat, lng, user_id } = req.body;
-    const { imgUrls } = req.body;
-    if (!Array.isArray(imgUrls)) {
-        imgUrls = [imgUrls];
-    }
     try {
+        const { id } = req.params;
+        const { name, description, title, price, type, rooms, area, state, flor, heating, waterheating, buildingtype, adress, district, top, favotire, currency, city, isHouse, lat, lng, user_id, imgUrls } = req.body;
+
+        if (!Array.isArray(imgUrls)) {
+            // Преобразовываем в массив, если imgUrls не является массивом
+            imgUrls = [imgUrls];
+        }
+
         const product = await productsService.getById(id);
         if (!product) {
             resp.sendStatus(404);
@@ -145,6 +147,6 @@ export const editOne = async (req, resp) => {
         resp.send(updatedProduct);
     } catch (error) {
         console.error(error);
-        resp.status(500).json({ error: 'Ошибка при обновлении продукта' });
+        resp.status(500).json({ error: 'Ошибка при обновлении продукта', details: error.message });
     }
 }
