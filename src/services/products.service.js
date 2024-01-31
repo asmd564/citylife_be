@@ -7,8 +7,8 @@ export const getAll = async (filters) => {
     // Определите объект фильтрации на основе переданных параметров
     const filterObject = {};
     if (type) filterObject.type = type;
-    if (minPrice) filterObject.price = { [Op.gte]: minPrice };
-    if (maxPrice) filterObject.price = { [Op.lte]: maxPrice };
+    if (minPrice !== undefined) filterObject.price = { [Op.gte]: minPrice };
+    if (maxPrice !== undefined) filterObject.price = { [Op.lte]: maxPrice };
     if (district) filterObject.district = district;
 
     // Запрос к базе данных с использованием фильтров
