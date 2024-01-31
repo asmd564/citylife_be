@@ -1,8 +1,20 @@
 import { Product } from '../models/product.js';
 
 
-export const getAll = async () => {
-    const result = await Product.findAll();
+export const getAll = async (filters) => {
+    const { type, minPrice, maxPrice, district } = filters;
+
+    // Определите объект фильтрации на основе переданных параметров
+    const filterObject = {};
+    if (type) filterObject.type = type;
+    if (minPrice) filterObject.price = { [Op.gte]: minPrice };
+    if (maxPrice) filterObject.price = { [Op.lte]: maxPrice };
+    if (district) filterObject.district = district;
+
+    // Запрос к базе данных с использованием фильтров
+    const result = await Product.findAll({
+        where: filterObject,
+    });
     return result;
 }
 
@@ -119,4 +131,3 @@ export const remove = async (id) => {
         where: { id }
     })
 }
-

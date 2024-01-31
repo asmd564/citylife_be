@@ -19,7 +19,14 @@ const upload = multer({ storage: storage, limits: { files: 30 } });
 export const uploadImageHandler = upload.array('images', 30);
 
 export const get = async (req, resp) => {
-    resp.send(await productsService.getAll());
+    try {
+        const filters = req.query; // Получаем параметры запроса из URL
+        const products = await productsService.getAll(filters);
+        resp.send(products);
+    } catch (error) {
+        console.error(error);
+        resp.status(500).json({ error: 'Ошибка при получении продуктов', details: error.message });
+    }
 }
 
 export const getOne = async (req, resp) => {

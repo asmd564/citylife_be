@@ -13,5 +13,7 @@ router.delete('/:id', productController.removeOne);
 
 router.put('/:id', productController.editOne);
 
+router.post('/filter', filterController.filterProducts);
+
 
 export { router };
