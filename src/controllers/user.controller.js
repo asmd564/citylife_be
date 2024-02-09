@@ -69,8 +69,10 @@ const updateUser = async (req, resp) => {
         }
 
         if (password !== undefined) {
-            const hashedPassword = await bcrypt.hash(password, 10);
-            user.password = hashedPassword;
+            if (password !== user.password) {
+                const hashedPassword = await bcrypt.hash(password, 10);
+                user.password = hashedPassword;
+            }
         }
 
         user = await user.save();
