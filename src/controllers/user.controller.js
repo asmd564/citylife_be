@@ -28,7 +28,7 @@ const getById = async (req, resp) => {
 
 const updateUser = async (req, resp) => {
     const { id } = req.params;
-    const { email, password, name, surname, exp, position } = req.body;
+    const { email, password, name, surname, exp, position, phone } = req.body;
 
     try {
         let user = await User.findByPk(id);
@@ -39,6 +39,10 @@ const updateUser = async (req, resp) => {
 
         if (email !== undefined) {
             user.email = email;
+        }
+
+        if (phone !== undefined) {
+            user.phone = phone;
         }
 
         if (name !== undefined) {
