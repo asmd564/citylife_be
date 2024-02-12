@@ -43,6 +43,9 @@ export const User = sequelize.define('user', {
     viber: {
         type: DataTypes.STRING,
     },
+    telegram: {
+        type: DataTypes.STRING,
+    },
 },{
     tableName: 'users',
     updatedAt:false,

@@ -10,7 +10,7 @@ import 'dotenv/config.js';
 
 const registration = async (req, resp) => {
     try {
-   const { email, password, name, surname, exp, position, phone, viber } = req.body;
+   const { email, password, name, surname, exp, position, phone, viber, telegram } = req.body;
 
    const activationToken = uuidv4();
 
@@ -21,7 +21,7 @@ const registration = async (req, resp) => {
 
    const hashedPassword = await bcrypt.hash(password, 10);
     
-   const newUser = await User.create({ email, password: hashedPassword, activationToken, name, avatar, exp, position, surname, phone, viber });
+   const newUser = await User.create({ email, password: hashedPassword, activationToken, name, avatar, exp, position, surname, phone, viber, telegram });
    await emailService.sendActivationEmail(email, activationToken);
    resp.send(newUser);
     } catch (error) {

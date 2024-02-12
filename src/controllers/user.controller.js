@@ -28,7 +28,7 @@ const getById = async (req, resp) => {
 
 const updateUser = async (req, resp) => {
     const { id } = req.params;
-    const { email, password, name, surname, exp, position, phone, viber } = req.body;
+    const { email, password, name, surname, exp, position, phone, viber, telegram } = req.body;
 
     try {
         let user = await User.findByPk(id);
@@ -47,6 +47,10 @@ const updateUser = async (req, resp) => {
 
         if (viber !== undefined) {
             user.viber = viber;
+        }
+
+        if (telegram !== undefined) {
+            user.telegram = telegram;
         }
 
         if (name !== undefined) {
