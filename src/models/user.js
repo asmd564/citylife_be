@@ -39,7 +39,10 @@ export const User = sequelize.define('user', {
     },
     exp: {
         type: DataTypes.STRING,
-    }
+    },
+    viber: {
+        type: DataTypes.STRING,
+    },
 },{
     tableName: 'users',
     updatedAt:false,
