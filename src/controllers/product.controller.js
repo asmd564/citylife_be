@@ -110,43 +110,43 @@ export const removeOne = async (req, resp) => {
 
 export const editOne = async (req, resp) => {
     const { id } = req.params;
-    const { imgUrls: newImgUrls, ...fieldsToUpdate } = req.body;
+    // const { imgUrls: newImgUrls, ...fieldsToUpdate } = req.body;
 
     try {
-        const product = await productsService.getById(id);
-        if (!product) {
-            resp.sendStatus(404);
-            return;
-        }
+        // const product = await productsService.getById(id);
+        // if (!product) {
+        //     resp.sendStatus(404);
+        //     return;
+        // }
 
-        let updatedProduct;
+        // let updatedProduct;
 
-        if (newImgUrls && Array.isArray(newImgUrls)) {
-            const uploadedImgUrls = [];
+        // if (newImgUrls && Array.isArray(newImgUrls)) {
+        //     const uploadedImgUrls = [];
 
-            // Обработка загруженных изображений с помощью multer
-            for (const file of req.files) {
-                const uploadedImgPath = path.join('src/uploads/', file.filename);
-                // Добавление путей загруженных изображений
-                uploadedImgUrls.push(`${process.env.CLIENT_HOST}/${uploadedImgPath}`);
-            }
+        //     // Обработка загруженных изображений с помощью multer
+        //     for (const file of req.files) {
+        //         const uploadedImgPath = path.join('src/uploads/', file.filename);
+        //         // Добавление путей загруженных изображений
+        //         uploadedImgUrls.push(`${process.env.CLIENT_HOST}/${uploadedImgPath}`);
+        //     }
 
-            // Объединение старых ссылок и новых ссылок на изображения
-            const combinedImgUrls = [...product.imgUrls, ...uploadedImgUrls];
+        //     // Объединение старых ссылок и новых ссылок на изображения
+        //     const combinedImgUrls = [...product.imgUrls, ...uploadedImgUrls];
 
-            // Обновление поля imgUrls и других полей
-            updatedProduct = await productsService.update({
-                id,
-                ...fieldsToUpdate,
-                imgUrls: combinedImgUrls,
-            });
-        } else {
-            // Если нет новых изображений, обновляем только другие поля без изменения imgUrls
-            updatedProduct = await productsService.update({
-                id,
-                ...fieldsToUpdate,
-            });
-        }
+        //     // Обновление поля imgUrls и других полей
+        //     updatedProduct = await productsService.update({
+        //         id,
+        //         ...fieldsToUpdate,
+        //         imgUrls: combinedImgUrls,
+        //     });
+        // } else {
+        //     // Если нет новых изображений, обновляем только другие поля без изменения imgUrls
+        //     updatedProduct = await productsService.update({
+        //         id,
+        //         ...fieldsToUpdate,
+        //     });
+        // }
 
         resp.send(updatedProduct);
     } catch (error) {
