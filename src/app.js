@@ -1,4 +1,6 @@
 import 'dotenv/config';
+import https from 'https';
+import fs from 'fs';
 import express from "express";
 import cors from 'cors';
 import { router as productRouter} from './routes/product.route.js';
@@ -60,6 +62,15 @@ app.use('/users', userRouter)
 
 
 
-app.listen(PORT, () => {
+const sslOptions = {
+  key: fs.readFileSync('/etc/letsencrypt/live/citylive.pl/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/citylive.pl/fullchain.pem'),
+};
+
+// Создайте HTTPS-сервер с использованием SSL-сертификата
+const server = https.createServer(sslOptions, app);
+
+
+server.listen(PORT, () => {
     console.log('server started', PORT);
 });
