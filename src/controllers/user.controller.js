@@ -31,6 +31,9 @@ const updateUser = async (req, resp) => {
     const { email, password, name, surname, exp, position, phone, viber, telegram } = req.body;
 
     try {
+        console.log('Request body:', req.body);
+        console.log('Request file:', req.file);
+        
         let user = await User.findByPk(id);
 
         if (!user) {
