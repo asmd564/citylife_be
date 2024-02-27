@@ -28,7 +28,7 @@ const getById = async (req, resp) => {
 
 const updateUser = async (req, resp) => {
     const { id } = req.params;
-    const { email, password, name, surname, exp, position, phone, viber, telegram, avatar } = req.body;
+    const { email, password, name, surname, exp, position, phone, viber, telegram } = req.body;
 
     try {
         let user = await User.findByPk(id);
@@ -71,8 +71,9 @@ const updateUser = async (req, resp) => {
             user.surname = surname;
         }
 
-        if (avatar !== undefined) {
-            user.avatar = avatar;
+        if (req.file) {
+            const avatarPath = `${process.env.CLIENT_HOST}/${req.file.filename}`;
+            user.avatar = avatarPath;
         }
 
         if (password !== undefined && password !== user.password) {
