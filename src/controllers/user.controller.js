@@ -1,23 +1,8 @@
-import multer from 'multer';
-import { v4 as uuidv4 } from 'uuid';
 import { User } from "../models/user.js";
 import { userService } from "../services/user.service.js";
 import bcrypt from 'bcrypt';
 import path from "path";
 import 'dotenv/config.js';
-
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'src/avatars/');
-    },
-    filename: function (req, file, cb) {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      const extension = file.originalname.split('.').pop();
-      cb(null, `${uuidv4()}-${uniqueSuffix}.${extension}`);
-    }
-});
-
-const upload = multer({ storage: storage });
 
 const getAllActivated = async (req, resp) => {
     const users = await userService.getAllActivated();
@@ -45,15 +30,17 @@ const updateUser = async (req, resp) => {
     const { id } = req.params;
     const { email, password, name, surname, exp, position, phone, viber, telegram } = req.body;
 
+    let avatar = null;
+     if (req.file) {
+        avatar = `${process.env.CLIENT_HOST}/${req.file.path}`.replace('src/', '');
+     }
+
     try {
         let user = await User.findByPk(id);
 
         if (!user) {
             return resp.status(404).send('Пользователь не найден');
         }
-
-        const multerUpload = util.promisify(upload.single('avatar'));
-        await multerUpload(req, resp);
 
         if (email !== undefined) {
             user.email = email;
@@ -89,9 +76,8 @@ const updateUser = async (req, resp) => {
             user.surname = surname;
         }
 
-        if (req.file) {
-            const avatarPath = `${process.env.CLIENT_HOST}/${req.file.path}`.replace('src/', '');
-            user.avatar = avatarPath;
+        if (avatar !== undefined) {
+            user.avatar = avatar;
         }
 
         if (password !== undefined && password !== user.password) {
