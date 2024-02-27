@@ -33,7 +33,7 @@ const updateUser = async (req, resp) => {
     try {
         console.log('Request body:', req.body);
         console.log('Request file:', req.file);
-        
+
         let user = await User.findByPk(id);
 
         if (!user) {
@@ -75,7 +75,7 @@ const updateUser = async (req, resp) => {
         }
 
         if (req.file) {
-            const avatarPath = `${process.env.CLIENT_HOST}/${req.file.filename}`;
+            const avatarPath = `${process.env.CLIENT_HOST}/avatars${req.file.filename}`;
             user.avatar = avatarPath;
         }
 
