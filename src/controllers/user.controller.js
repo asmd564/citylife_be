@@ -30,7 +30,7 @@ const updateUser = async (req, resp) => {
     const { id } = req.params;
     const { email, password, name, surname, exp, position, phone, viber, telegram } = req.body;
 
-    let avatar = null;
+    let avatar = req.file;
      if (req.file) {
         avatar = `${process.env.CLIENT_HOST}/${req.file.path}`.replace('src/', '');
      }
