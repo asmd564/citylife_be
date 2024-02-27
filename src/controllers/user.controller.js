@@ -75,7 +75,7 @@ const updateUser = async (req, resp) => {
         }
 
         if (req.file) {
-            const avatarPath = `${process.env.CLIENT_HOST}/avatars${req.file.filename}`;
+            const avatarPath = `${process.env.CLIENT_HOST}/avatars/${req.file.filename}`;
             user.avatar = avatarPath;
         }
 
