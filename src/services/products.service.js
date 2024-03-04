@@ -98,7 +98,8 @@ export const update = async ({
     city,
     isHouse,
     lat,
-    lng
+    lng,
+    user_id
 }) => {
     await Product.update({ 
         name,
@@ -122,7 +123,8 @@ export const update = async ({
         city,
         isHouse,
         lat,
-        lng
+        lng,
+        user_id
     }, { where: { id } })
 }
 
