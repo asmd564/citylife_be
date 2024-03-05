@@ -167,11 +167,35 @@ export const editOne = async (req, resp) => {
             return;
         }
 
+        const updatedImgUrls = [];
+
+        if (req.files && req.files.length > 0) {
+            for (const file of req.files) {
+                const __filename = fileURLToPath(import.meta.url);
+                const watermarkPath = path.join(path.dirname(__filename),'waterpath.png');
+                const processedImage = await sharp(file.path)
+                    .rotate()
+                    .resize({ width: 900 })
+                    .composite([{ input: watermarkPath, gravity: 'center', blend: 'over', opacity: 0.6 }])
+                    .toBuffer();
+
+                // Генерируем новое имя файла для сохранения на сервере
+                const filename = `${Date.now()}-${file.originalname}`;
+
+                // Сохраняем обработанное изображение
+                await sharp(processedImage).toFile(`src/uploads/${filename}`);
+
+                updatedImgUrls.push(`${process.env.CLIENT_HOST}/uploads/${filename}`);
+            }
+        }
+
+
         let updatedProduct;
 
         // Обновляем только другие поля без изменения imgUrls
         updatedProduct = await productsService.update({
             id,
+            imgUrls: [...product.imgUrls, ...updatedImgUrls, ...newImgUrls],
             ...fieldsToUpdate,
         });
 

@@ -11,7 +11,7 @@ router.post('/',productController.uploadImageHandler, productController.addOne);
 
 router.delete('/:id', productController.removeOne);
 
-router.put('/:id', productController.editOne);
+router.put('/:id',productController.uploadImageHandler, productController.editOne);
 
 
 export { router };
