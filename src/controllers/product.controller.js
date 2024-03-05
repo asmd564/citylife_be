@@ -169,10 +169,11 @@ export const editOne = async (req, resp) => {
 
         const updatedImgUrls = [];
 
+        // Обработка новых файлов, если они были загружены
         if (req.files && req.files.length > 0) {
             for (const file of req.files) {
                 const __filename = fileURLToPath(import.meta.url);
-                const watermarkPath = path.join(path.dirname(__filename),'waterpath.png');
+                const watermarkPath = path.join(path.dirname(__filename), 'waterpath.png');
                 const processedImage = await sharp(file.path)
                     .rotate()
                     .resize({ width: 900 })
@@ -189,15 +190,16 @@ export const editOne = async (req, resp) => {
             }
         }
 
+        // Обработка ссылок на изображения
+        const existingImgUrls = newImgUrls.filter(url => !url.startsWith('data:')); // Фильтрация ссылок (не base64)
+        updatedImgUrls.push(...existingImgUrls);
 
-        if (!arraysAreEqual(product.imgUrls, newImgUrls)) {
-            // Обновляем массив imgUrls в базе данных
-            await productsService.update({
-                id,
-                imgUrls: newImgUrls,
-                ...fieldsToUpdate,
-            });
-        }
+        // Обновляем массив imgUrls в базе данных
+        await productsService.update({
+            id,
+            imgUrls: updatedImgUrls.length > 0 ? updatedImgUrls : newImgUrls,
+            ...fieldsToUpdate,
+        });
 
         resp.sendStatus(200);
     } catch (error) {
