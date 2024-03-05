@@ -190,18 +190,26 @@ export const editOne = async (req, resp) => {
         }
 
 
-        let updatedProduct;
+        if (!arraysAreEqual(product.imgUrls, newImgUrls)) {
+            // Обновляем массив imgUrls в базе данных
+            await productsService.update({
+                id,
+                imgUrls: newImgUrls,
+                ...fieldsToUpdate,
+            });
+        }
 
-        // Обновляем только другие поля без изменения imgUrls
-        updatedProduct = await productsService.update({
-            id,
-            imgUrls: [...product.imgUrls, ...updatedImgUrls, ...newImgUrls],
-            ...fieldsToUpdate,
-        });
-
-        resp.send(updatedProduct);
+        resp.sendStatus(200);
     } catch (error) {
         console.error(error);
         resp.status(500).json({ error: 'Ошибка при обновлении продукта', details: error.message });
     }
 };
+
+function arraysAreEqual(arr1, arr2) {
+    if (arr1.length !== arr2.length) {
+        return false;
+    }
+
+    return arr1.every((value, index) => value === arr2[index]);
+}
