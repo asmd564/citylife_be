@@ -187,7 +187,7 @@ export const editOne = async (req, resp) => {
         }
 
         // Получаем ссылки на изображения, которые нужно удалить
-        const imagesToDelete = product.imgUrls.filter(url => !newImgUrls.includes(url));
+        const imagesToDelete = product.imgUrls ? product.imgUrls.filter(url => !newImgUrls.includes(url)) : [];
 
         // Удаляем изображения из файловой системы
         for (const imageUrl of imagesToDelete) {
