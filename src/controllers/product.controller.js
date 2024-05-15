@@ -167,9 +167,8 @@ export const editOne = async (req, resp) => {
             return;
         }
 
-        const updatedImgUrls = [];
-
-        // Обработка новых файлов, если они были загружены
+        // Собираем все новые ссылки на изображения
+        const newImageUrls = [];
         if (req.files && req.files.length > 0) {
             for (const file of req.files) {
                 const __filename = fileURLToPath(import.meta.url);
@@ -180,24 +179,27 @@ export const editOne = async (req, resp) => {
                     .composite([{ input: watermarkPath, gravity: 'center', blend: 'over', opacity: 0.6 }])
                     .toBuffer();
 
-                // Генерируем новое имя файла для сохранения на сервере
                 const filename = `${Date.now()}-${file.originalname}`;
-
-                // Сохраняем обработанное изображение
                 await sharp(processedImage).toFile(`src/uploads/${filename}`);
 
-                updatedImgUrls.push(`${process.env.CLIENT_HOST}/uploads/${filename}`);
+                newImageUrls.push(`${process.env.CLIENT_HOST}/uploads/${filename}`);
             }
         }
 
-        // Обработка ссылок на изображения
-        const existingImgUrls = newImgUrls.filter(url => !url.startsWith('data:')); // Фильтрация ссылок (не base64)
-        updatedImgUrls.push(...existingImgUrls);
+        // Получаем ссылки на изображения, которые нужно удалить
+        const imagesToDelete = product.imgUrls.filter(url => !newImgUrls.includes(url));
 
-        // Обновляем массив imgUrls в базе данных
+        // Удаляем изображения из файловой системы
+        for (const imageUrl of imagesToDelete) {
+            const imageName = imageUrl.split('/').pop(); // Получаем имя файла из URL
+            const imagePath = path.join(__dirname, 'uploads', imageName);
+            await fs.promises.unlink(imagePath);
+        }
+
+        // Обновляем базу данных с новыми ссылками на изображения и другими полями
         await productsService.update({
             id,
-            imgUrls: updatedImgUrls.length > 0 ? updatedImgUrls : newImgUrls,
+            imgUrls: [...newImgUrls, ...newImageUrls], // Объединяем старые и новые ссылки
             ...fieldsToUpdate,
         });
 
@@ -207,6 +209,7 @@ export const editOne = async (req, resp) => {
         resp.status(500).json({ error: 'Ошибка при обновлении продукта', details: error.message });
     }
 };
+
 
 function arraysAreEqual(arr1, arr2) {
     if (arr1.length !== arr2.length) {
