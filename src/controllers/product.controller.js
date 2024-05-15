@@ -170,7 +170,7 @@ export const editOne = async (req, resp) => {
 
         // Собираем все новые ссылки на изображения
         const newImageUrls = [];
-        if (req.files && req.files.length > 0) {
+        if (newImgUrls && req.files && req.files.length > 0) {
             for (const file of req.files) {
                 const filename = `${Date.now()}-${file.originalname}`;
                 const watermarkPath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'waterpath.png');
