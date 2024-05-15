@@ -199,7 +199,7 @@ export const editOne = async (req, resp) => {
         // Обновляем базу данных с новыми ссылками на изображения и другими полями
         await productsService.update({
             id,
-            imgUrls: [...(Array.isArray(newImgUrls) ? newImgUrls : []), ...newImageUrls], // Объединяем старые и новые ссылки
+            imgUrls: [...product.imgUrls, ...newImageUrls], // Сохраняем старые и новые ссылки
             ...fieldsToUpdate,
         });
 
