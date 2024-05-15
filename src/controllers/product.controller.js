@@ -190,11 +190,11 @@ export const editOne = async (req, resp) => {
         const imagesToDelete = product.imgUrls ? product.imgUrls.filter(url => !newImgUrls.includes(url)) : [];
 
         // Удаляем изображения из файловой системы
-        for (const imageUrl of imagesToDelete) {
-            const imageName = imageUrl.split('/').pop(); // Получаем имя файла из URL
-            const imagePath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'uploads', imageName);
-            await fs.promises.unlink(imagePath);
-        }
+        // for (const imageUrl of imagesToDelete) {
+        //     const imageName = imageUrl.split('/').pop(); // Получаем имя файла из URL
+        //     const imagePath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'uploads', imageName);
+        //     await fs.promises.unlink(imagePath);
+        // }
 
         // Обновляем базу данных с новыми ссылками на изображения и другими полями
         await productsService.update({
