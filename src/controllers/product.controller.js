@@ -3,6 +3,7 @@ import multer from 'multer';
 import sharp from 'sharp';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import fs from 'fs';
 import 'dotenv/config.js';
 
 const storage = multer.diskStorage({
@@ -171,15 +172,14 @@ export const editOne = async (req, resp) => {
         const newImageUrls = [];
         if (req.files && req.files.length > 0) {
             for (const file of req.files) {
-                const __filename = fileURLToPath(import.meta.url);
-                const watermarkPath = path.join(path.dirname(__filename), 'waterpath.png');
+                const filename = `${Date.now()}-${file.originalname}`;
+                const watermarkPath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'waterpath.png');
                 const processedImage = await sharp(file.path)
                     .rotate()
                     .resize({ width: 900 })
                     .composite([{ input: watermarkPath, gravity: 'center', blend: 'over', opacity: 0.6 }])
                     .toBuffer();
 
-                const filename = `${Date.now()}-${file.originalname}`;
                 await sharp(processedImage).toFile(`src/uploads/${filename}`);
 
                 newImageUrls.push(`${process.env.CLIENT_HOST}/uploads/${filename}`);
@@ -192,7 +192,7 @@ export const editOne = async (req, resp) => {
         // Удаляем изображения из файловой системы
         for (const imageUrl of imagesToDelete) {
             const imageName = imageUrl.split('/').pop(); // Получаем имя файла из URL
-            const imagePath = path.join(__dirname, 'uploads', imageName);
+            const imagePath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'uploads', imageName);
             await fs.promises.unlink(imagePath);
         }
 
