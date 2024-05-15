@@ -170,7 +170,7 @@ export const editOne = async (req, resp) => {
 
         // Собираем все новые ссылки на изображения
         const newImageUrls = [];
-        if (newImgUrls && req.files && req.files.length > 0) {
+        if (Array.isArray(newImgUrls) && req.files && req.files.length > 0) {
             for (const file of req.files) {
                 const filename = `${Date.now()}-${file.originalname}`;
                 const watermarkPath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'waterpath.png');
@@ -186,20 +186,10 @@ export const editOne = async (req, resp) => {
             }
         }
 
-        // Получаем ссылки на изображения, которые нужно удалить
-        // const imagesToDelete = product.imgUrls ? product.imgUrls.filter(url => !newImgUrls.includes(url)) : [];
-
-        // Удаляем изображения из файловой системы
-        // for (const imageUrl of imagesToDelete) {
-        //     const imageName = imageUrl.split('/').pop(); // Получаем имя файла из URL
-        //     const imagePath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'uploads', imageName);
-        //     await fs.promises.unlink(imagePath);
-        // }
-
         // Обновляем базу данных с новыми ссылками на изображения и другими полями
         await productsService.update({
             id,
-            imgUrls: [...newImgUrls, ...newImageUrls], // Объединяем старые и новые ссылки
+            imgUrls: [...(Array.isArray(newImgUrls) ? newImgUrls : []), ...newImageUrls], // Объединяем старые и новые ссылки
             ...fieldsToUpdate,
         });
 
@@ -209,6 +199,7 @@ export const editOne = async (req, resp) => {
         resp.status(500).json({ error: 'Ошибка при обновлении продукта', details: error.message });
     }
 };
+
 
 
 function arraysAreEqual(arr1, arr2) {
