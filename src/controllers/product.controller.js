@@ -55,7 +55,7 @@ export const addOne = async (req, resp) => {
 
             await sharp(processedImage).toFile(`src/uploads/${filename}`);
 
-            imgUrls.push(`http://${process.env.CLIENT_HOST}/uploads/${filename}`);
+            imgUrls.push(`${process.env.CLIENT_HOST}/uploads/${filename}`);
             fs.unlinkSync(file.path);
         }
 
