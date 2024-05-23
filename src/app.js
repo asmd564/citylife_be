@@ -20,7 +20,11 @@ const imagePath = path.join(__dirname, 'uploads');
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: '*', // Разрешить доступ с любого источника
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Разрешенные методы HTTP
+  allowedHeaders: 'Content-Type,Authorization', // Разрешенные заголовки
+}));
 
 app.post('/email', (req, res) => {
     const transporter = nodemailer.createTransport({
@@ -62,15 +66,19 @@ app.use('/users', userRouter)
 
 
 
-const sslOptions = {
-  key: fs.readFileSync('/etc/letsencrypt/live/citylive.pl/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/citylive.pl/fullchain.pem'),
-};
+// const sslOptions = {
+//   key: fs.readFileSync('/etc/letsencrypt/live/citylive.pl/privkey.pem'),
+//   cert: fs.readFileSync('/etc/letsencrypt/live/citylive.pl/fullchain.pem'),
+// };
 
 // Создайте HTTPS-сервер с использованием SSL-сертификата
-const server = https.createServer(sslOptions, app);
+// const server = https.createServer(sslOptions, app);
 
 
-server.listen(PORT, () => {
-    console.log('server started', PORT);
+// server.listen(PORT, () => {
+//     console.log('server started', PORT);
+// });
+
+app.listen(PORT, () => {
+  console.log('server started', PORT);
 });
