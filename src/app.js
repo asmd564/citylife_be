@@ -9,8 +9,7 @@ import nodemailer from 'nodemailer';
 import { authRouter } from "./routes/auth.route.js";
 import { userRouter } from './routes/user.route.js';
 
-
-const PORT = process.env.PORT ||3005;
+const PORT = process.env.PORT || 3005;
 
 const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
@@ -61,26 +60,17 @@ app.post('/email', (req, res) => {
 app.use('/uploads', express.static(imagePath));
 app.use('/avatars', express.static('src/avatars'));
 
-
 app.use('/products', productRouter);
-
-app.use(authRouter)
-app.use('/users', userRouter)
-
-
+app.use(authRouter);
+app.use('/users', userRouter);
 
 const sslOptions = {
   key: fs.readFileSync('/etc/letsencrypt/live/citylive.pl/privkey.pem'),
   cert: fs.readFileSync('/etc/letsencrypt/live/citylive.pl/fullchain.pem'),
- };
+};
 
- const server = https.createServer(sslOptions, app);
+const server = https.createServer(sslOptions, app);
 
-
- server.listen(PORT, () => {
-     console.log('server started', PORT);
- });
-
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log('server started', PORT);
 });
