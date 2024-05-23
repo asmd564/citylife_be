@@ -66,18 +66,17 @@ app.use('/users', userRouter)
 
 
 
-// const sslOptions = {
-//   key: fs.readFileSync('/etc/letsencrypt/live/citylive.pl/privkey.pem'),
-//   cert: fs.readFileSync('/etc/letsencrypt/live/citylive.pl/fullchain.pem'),
-// };
+const sslOptions = {
+  key: fs.readFileSync('/etc/letsencrypt/live/citylive.pl/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/citylive.pl/fullchain.pem'),
+ };
 
-// Создайте HTTPS-сервер с использованием SSL-сертификата
-// const server = https.createServer(sslOptions, app);
+ const server = https.createServer(sslOptions, app);
 
 
-// server.listen(PORT, () => {
-//     console.log('server started', PORT);
-// });
+ server.listen(PORT, () => {
+     console.log('server started', PORT);
+ });
 
 app.listen(PORT, () => {
   console.log('server started', PORT);
