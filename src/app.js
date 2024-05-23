@@ -31,6 +31,9 @@ app.post('/email', (req, res) => {
         user: 'citylive.if@gmail.com',
         pass: 'zrfv dein pwun vzsq',
       },
+      tls: {
+        rejectUnauthorized: false
+      }
     });
   
     let mailOptions = {

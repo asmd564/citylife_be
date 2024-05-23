@@ -25,6 +25,7 @@ const registration = async (req, resp) => {
    await emailService.sendActivationEmail(email, activationToken);
    resp.send(newUser);
     } catch (error) {
+        console.error('Error during registration:', error);
         resp.sendStatus(500)
     }
 }
