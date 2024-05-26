@@ -55,7 +55,7 @@ export const addOne = async (req, resp) => {
 
             await sharp(processedImage).toFile(`src/uploads/${filename}`);
 
-            imgUrls.push(`${process.env.CLIENT_HOST}/uploads/${filename}`);
+            imgUrls.push(`http://${process.env.CLIENT_HOST}/uploads/${filename}`);
             fs.unlinkSync(file.path);
         }
 
@@ -130,7 +130,7 @@ export const editOne = async (req, resp) => {
         }
 
         // Обновляем запись проекта в базе данных, заменяя старый массив imgUrls на новый
-        await productsService.update({
+        await products.service.update({
             id,
             imgUrls,
             ...fieldsToUpdate

@@ -8,6 +8,7 @@ import path from 'path';
 import nodemailer from 'nodemailer';
 import { authRouter } from "./routes/auth.route.js";
 import { userRouter } from './routes/user.route.js';
+import { reviewsRouter } from './routes/reviews.route.js'; 
 
 const PORT = process.env.PORT || 3005;
 
@@ -61,16 +62,39 @@ app.use('/uploads', express.static(imagePath));
 app.use('/avatars', express.static('src/avatars'));
 
 app.use('/products', productRouter);
+<<<<<<< HEAD
 app.use(authRouter);
 app.use('/users', userRouter);
+=======
+app.use('/reviews', reviewsRouter);
+
+app.use(authRouter)
+app.use('/users', userRouter)
+
+
+>>>>>>> abf8209 (reviews add)
 
 const sslOptions = {
   key: fs.readFileSync('/etc/letsencrypt/live/citylive.pl/privkey.pem'),
   cert: fs.readFileSync('/etc/letsencrypt/live/citylive.pl/fullchain.pem'),
 };
 
+<<<<<<< HEAD
 const server = https.createServer(sslOptions, app);
 
 server.listen(PORT, () => {
   console.log('server started', PORT);
 });
+=======
+//Создайте HTTPS-сервер с использованием SSL-сертификата
+const server = https.createServer(sslOptions, app);
+
+
+server.listen(PORT, () => {
+    console.log('server started', PORT);
+});
+
+// app.listen(PORT, () => {
+//   console.log('server started', PORT);
+// });
+>>>>>>> abf8209 (reviews add)
